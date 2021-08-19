@@ -5,6 +5,8 @@ document.body.onload = () => {
   const floor = document.querySelector('.counter'); // Счетчик этажей
   const floors = document.querySelector('.home-image').querySelectorAll('path'); // Все этажи на картинке
   const homeImage = document.querySelector('.home-image'); // Картинка
+  const btnFloors = document.querySelector('.button-primary'); // Смотреть квартиры
+  const modal = document.querySelector('.modal');
   let counter = 2; // Текущий этаж
 
   // Отображает выбранный этаж в счетчике
@@ -16,7 +18,6 @@ document.body.onload = () => {
       draw = count;
     }
     floor.textContent = draw;
-    console.log(counter);
   }
 
   // Скрывает все этажи на картинке
@@ -85,5 +86,16 @@ document.body.onload = () => {
       })
     }
   })
+
+  btnFloors.addEventListener('click', e => {
+    modal.classList.remove('modal-hidden');
+  });
+
+  modal.addEventListener('click', e => {
+    const target = e.target;
+    if (target.classList.contains('close-modal') || !target.closest('.modal-inner')){
+      modal.classList.add('modal-hidden');
+    }
+  });
 
 }
