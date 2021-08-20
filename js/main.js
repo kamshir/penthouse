@@ -8,7 +8,10 @@ document.body.onload = () => {
   const btnFloors = document.querySelector('.button-primary'); // Смотреть квартиры
   const modal = document.querySelector('.modal');
   const modalCounter = document.querySelector('.modal-counter');
-  let counter = 1123123; // Текущий этаж
+  const flatList = document.querySelector('.flat-list');
+  const modalImage = document.querySelector('.modal-image'); // Картинка в модальном окне
+  const paths = modalImage.querySelectorAll('path');
+  let counter = 2; // Текущий этаж
 
   // Отображает выбранный этаж в счетчике
   function drawFloor(count = counter) {
@@ -23,6 +26,32 @@ document.body.onload = () => {
     }
     floor.textContent = draw;
     modalCounter.textContent = draw;
+  }
+
+  // Рисуем квартиры
+  function drawFlats() {
+    $.getJSON("db.json", function(data) {
+        flatList.innerHTML = '';
+        for (let i = 0; i < data.length; i++) {
+          const item = document.createElement('li');
+          item.classList.add('flat-item');
+          const link = document.createElement('a');
+          link.href = '#';
+          link.setAttribute("flatID", data[i].number);
+          link.classList.add('flat-link');
+          link.textContent = `кв. ${data[i].number + counter*10}, ${data[i].apartaments} комн. ${data[i].square} кв. м.`;
+          item.appendChild(link);
+          flatList.appendChild(item);
+        }
+    });
+  }
+
+  // Присваиваем id квартирам
+  function setIDs() {
+    const flats = modalImage.querySelectorAll('path');
+    flats.forEach((el, i) => {
+      el.setAttribute('flatid', flats.length - i);
+    });
   }
 
   // Скрывает все этажи на картинке
@@ -51,10 +80,33 @@ document.body.onload = () => {
     modal.classList.toggle('modal-hidden');
   }
 
+  // Скрываем квартиры
+  function hideFlats() {
+    modalImage.querySelectorAll('path').forEach(p => p.classList.add('flat-hidden'));
+  }
+
+  // Показать нужную квартиру
+  function showFlat(id) {
+    paths[paths.length - id].classList.remove('flat-hidden');
+  }
+
+  // Скрываем описание квартир
+  function hideAparts() {
+    flatList.querySelectorAll('.flat-link').forEach(el => el.classList.remove('apart-chose'));
+  }
+
+  // Показываем описание нужной квартиры
+  function showApart(el) {
+    el.classList.add('apart-chose');
+  }
+
   hideFloors();
+  hideFlats();
+  hideAparts();
   drawFloor();
   showFloor();
   blockedArrows();
+  drawFlats();
 
   arrowUp.addEventListener('click', e => {
     if (counter < floors.length+1 && !arrowUp.classList.contains('btn-disabled')) {
@@ -63,8 +115,10 @@ document.body.onload = () => {
       hideFloors();
       drawFloor();
       showFloor();
+      blockedArrows();
+      drawFlats();
+      setIDs();
     }
-    blockedArrows();
   })
 
   arrowDown.addEventListener('click', e => {
@@ -74,8 +128,10 @@ document.body.onload = () => {
       hideFloors();
       drawFloor();
       showFloor();
+      blockedArrows();
+      drawFlats();
+      setIDs();
     }
-    blockedArrows();
   })
 
   // Меняем этаж при наведении
@@ -93,6 +149,8 @@ document.body.onload = () => {
           drawFloor();
           showFloor();
           blockedArrows();
+          drawFlats();
+          setIDs();
         }
       })
     }
@@ -106,12 +164,52 @@ document.body.onload = () => {
     }
   })
 
-  btnFloors.addEventListener('click', toggleModal);
+  btnFloors.addEventListener('click', e => {
+    drawFlats();
+    setIDs();
+    toggleModal();
+  });
 
   modal.addEventListener('click', e => {
     const target = e.target;
     if (target.closest('.modal-close') || !target.closest('.modal-inner')){
       toggleModal();
+    }
+  });
+
+  flatList.addEventListener('mouseover', e => {
+    const target = e.target;
+    if (target.closest('.flat-link')){
+      hideFlats();
+      showFlat(target.getAttribute('flatid'));
+    }
+  });
+
+  flatList.addEventListener('mouseout', e => {
+    const target = e.target;
+    if (target.closest('.flat-link')){
+      hideFlats();
+    }
+  });
+
+  modalImage.addEventListener('mouseover', e => {
+    const target = e.target;
+    if (target.closest('path')){
+      showFlat(target.getAttribute('flatid'))
+      flatList.querySelectorAll('.flat-link').forEach(el => {
+        if (el.getAttribute('flatid') == target.getAttribute('flatid')){
+          hideAparts();
+          showApart(el);
+        }
+      })
+    }
+  });
+
+  modalImage.addEventListener('mouseout', e => {
+    const target = e.target;
+    if (target.closest('path')){
+      hideFlats();
+      hideAparts();
     }
   });
 

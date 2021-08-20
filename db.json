@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "square": 64.5,
+    "apartaments": 4,
+    "number": 1
+  },
+  {
+    "id": 2,
+    "square": 38.9,
+    "apartaments": 3,
+    "number": 2
+  },
+  {
+    "id": 3,
+    "square": 35.9,
+    "apartaments": 3,
+    "number": 3
+  },
+  {
+    "id": 4,
+    "square": 56.0,
+    "apartaments": 4,
+    "number": 4
+  },
+  {
+    "id": 5,
+    "square": 35.8,
+    "apartaments": 3,
+    "number": 5
+  },
+  {
+    "id": 6,
+    "square": 35.8,
+    "apartaments": 3,
+    "number": 6
+  },
+  {
+    "id": 7,
+    "square": 58.4,
+    "apartaments": 4,
+    "number": 7
+  },
+  {
+    "id": 8,
+    "square": 32.3,
+    "apartaments": 2,
+    "number": 8
+  },
+  {
+    "id": 9,
+    "square": 29.9,
+    "apartaments": 2,
+    "number": 9
+  },
+  {
+    "id": 10,
+    "square": 75.2,
+    "apartaments": 6,
+    "number": 10
+  }
+]

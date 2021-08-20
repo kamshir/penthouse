@@ -248,12 +248,16 @@ body {
 }
 
 .flats path {
-  opacity: 0;
   cursor: pointer;
 }
 
-.flats path:hover {
-  opacity: 1;
+.flat-hidden {
+  opacity: 0;
+}
+
+.apart-chose {
+  color: #3596F5;
+  text-decoration: underline;
 }
 
 /* footer */
