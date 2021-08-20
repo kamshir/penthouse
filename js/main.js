@@ -7,17 +7,22 @@ document.body.onload = () => {
   const homeImage = document.querySelector('.home-image'); // Картинка
   const btnFloors = document.querySelector('.button-primary'); // Смотреть квартиры
   const modal = document.querySelector('.modal');
-  let counter = 2; // Текущий этаж
+  const modalCounter = document.querySelector('.modal-counter');
+  let counter = 1123123; // Текущий этаж
 
   // Отображает выбранный этаж в счетчике
   function drawFloor(count = counter) {
     let draw = '';
-    if (count < 10) {
+    if (count < 10 && count > 1) {
       draw = '0' + count;
-    } else if (count >= 10) {
+    } else if (count >= 10 && count < 19) {
       draw = count;
+    } else {
+      counter = 2;
+      draw = '0' + counter;
     }
     floor.textContent = draw;
+    modalCounter.textContent = draw;
   }
 
   // Скрывает все этажи на картинке
@@ -32,9 +37,24 @@ document.body.onload = () => {
     floors[counter-2].classList.remove('path-hide');
   }
 
+  //  Блокировка кнопок
+  function blockedArrows() {
+    if (counter === floors.length+1) {
+      arrowUp.classList.add('btn-disabled');
+    } else if (counter == 2) {
+      arrowDown.classList.add('btn-disabled');
+    }
+  }
+
+  // Открываем|Закрываем окно
+  function toggleModal() {
+    modal.classList.toggle('modal-hidden');
+  }
+
   hideFloors();
   drawFloor();
   showFloor();
+  blockedArrows();
 
   arrowUp.addEventListener('click', e => {
     if (counter < floors.length+1 && !arrowUp.classList.contains('btn-disabled')) {
@@ -44,9 +64,7 @@ document.body.onload = () => {
       drawFloor();
       showFloor();
     }
-    if (counter === floors.length+1) {
-      arrowUp.classList.add('btn-disabled');
-    }
+    blockedArrows();
   })
 
   arrowDown.addEventListener('click', e => {
@@ -57,10 +75,7 @@ document.body.onload = () => {
       drawFloor();
       showFloor();
     }
-    // Блокирует кнопку вниз
-    if (counter == 2) {
-      arrowDown.classList.add('btn-disabled');
-    }
+    blockedArrows();
   })
 
   // Меняем этаж при наведении
@@ -77,24 +92,26 @@ document.body.onload = () => {
           hideFloors();
           drawFloor();
           showFloor();
-          if (counter === floors.length+1) {
-            arrowUp.classList.add('btn-disabled');
-          } else if (counter == 2) {
-            arrowDown.classList.add('btn-disabled');
-          }
+          blockedArrows();
         }
       })
     }
   })
 
-  btnFloors.addEventListener('click', e => {
-    modal.classList.remove('modal-hidden');
-  });
+  // Открываем этаж при клике
+  homeImage.addEventListener('click', e => {
+    const floor = e.target;
+    if (floor.closest('path')){
+      toggleModal()
+    }
+  })
+
+  btnFloors.addEventListener('click', toggleModal);
 
   modal.addEventListener('click', e => {
     const target = e.target;
-    if (target.classList.contains('close-modal') || !target.closest('.modal-inner')){
-      modal.classList.add('modal-hidden');
+    if (target.closest('.modal-close') || !target.closest('.modal-inner')){
+      toggleModal();
     }
   });
 
